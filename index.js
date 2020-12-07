@@ -5,24 +5,21 @@ const renderer = new THREE.WebGLRenderer();
 renderer.setSize( window.innerWidth, window.innerHeight );
 document.body.appendChild( renderer.domElement );
 
-const loader = new THREE.CubeTextureLoader();
-const texture = loader.load([ 
-'./texture_map.png',
-'./texture_map.png',
-'./texture_map.png',
-'./texture_map.png',
-'./texture_map.png',
-'./texture_map.png',
-]);
+const loader = new THREE.TextureLoader();
+const texture = loader.setCrossOrigin('anonymous').setPath('/').load('nx.jpg');
 texture.anisotropy = 16;
 
+const materials = [
+    new THREE.MeshLambertMaterial({ map: loader.load('doorA.jpg'), side: THREE.BackSide }),
+    new THREE.MeshLambertMaterial({ map: loader.load('doorB.jpg'), side: THREE.BackSide }),
+    new THREE.MeshLambertMaterial({ map: loader.load('ceiling.jpg'), side: THREE.BackSide }),
+    new THREE.MeshLambertMaterial({ map: loader.load('floor.jpg'), side: THREE.BackSide }),
+    new THREE.MeshLambertMaterial({ map: loader.load('wall.jpg'), side: THREE.BackSide }),
+    new THREE.MeshLambertMaterial({ map: loader.load('wall.jpg'), side: THREE.BackSide }),
+]
 
-const geometry = new THREE.BoxGeometry(1, 1, 1);
-const material = new THREE.MeshLambertMaterial({ 
-    map: texture,
-    side: THREE.BackSide 
-});
-const cube = new THREE.Mesh( geometry, material );
+const geometry = new THREE.BoxGeometry(3, 1, 3);
+const cube = new THREE.Mesh( geometry, materials );
 scene.add( cube );
 
 camera.position.z = -0.1;
@@ -31,7 +28,7 @@ const controls = new OrbitControls( camera, renderer.domElement );
 controls.enablePan = false;
 controls.enableZoom = false;
 
-const alight = new THREE.AmbientLight( 0x404040 );
+const alight = new THREE.AmbientLight( 0x404040, 5);
 scene.add(alight);
 
 
@@ -53,7 +50,7 @@ light.shadow.camera.bottom = - d;
 
 light.shadow.camera.far = 1000;
 
-scene.add( light );
+//scene.add( light );
 
 function animate() {
     requestAnimationFrame( animate );
@@ -62,3 +59,27 @@ function animate() {
 }
 
 animate();
+
+var vector = new THREE.Vector3();
+document.body.onmousedown = e => {
+    console.log(e)
+}
+
+var moved = false;
+window.onmousemove = () => {
+    moved = true;
+}
+
+window.onclick = e => {
+    if(!moved) {
+        camera.getWorldDirection(vector)
+        console.log(vector.x);
+        if(vector.x >  0.8) {
+            window.location.href = '/eraseRoom';
+        }
+        else if(vector.x < -0.8) {
+            window.location.href = '/messageRoom';
+        }
+    }
+    moved = false;
+}
