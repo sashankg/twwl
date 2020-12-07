@@ -22,7 +22,7 @@ times.sort()
 
 const offset = new Date(31448786988 - 12312396);
 
-const first = 9000 //binarySearch(times, parseFloat(Date.now() - offset)) + 2;
+const first = Math.floor(Math.random() * 9000); //binarySearch(times, parseFloat(Date.now() - offset)) + 2;
 
 const pics = {
     'Christina Li': 'https://scontent.fagc1-2.fna.fbcdn.net/v/t1.0-9/71500364_2468942046660787_7118213968706928640_n.jpg?_nc_cat=108&ccb=2&_nc_sid=174925&_nc_ohc=YK8QaA8CxPgAX-M4-Vm&_nc_ht=scontent.fagc1-2.fna&oh=71a5bb31027ff87750b0c1ea6f12e8e7&oe=5FF36DB8',
@@ -39,6 +39,7 @@ function repeat(i, prev) {
         i = i + 1;
     }
     window.setTimeout(() => {
+        console.log(messageData[times[i]].content);
         var msg = new SpeechSynthesisUtterance(messageData[times[i]].content);
         msg.addEventListener('end', e => {
             if(!window.speechSynthesis.speaking) {
